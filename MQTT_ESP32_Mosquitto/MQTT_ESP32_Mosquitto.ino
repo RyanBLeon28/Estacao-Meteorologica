@@ -14,9 +14,6 @@ DHT dht(DHTPIN, DHTTYPE);
 //Sensor BMP280
 Adafruit_BMP280 bmp; // I2C Interface         G22 -- SCL ; G21 SDA
 
-// const char* ssid     = "VETORIAL_135F";
-// const char* password = "280273iara";
-
 const char* ssid     = "Sala_J13";
 const char* password = "salaj132023";
 
