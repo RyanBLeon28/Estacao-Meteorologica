@@ -1,0 +1,406 @@
+------------------Dia 15/12/2023------------------
+
+Para melhor resposta do tacômetro, deixei mais firme a fita reflexiva
+
+Reorganizei o código de tratamento dos dados para análise de frequencia angular e velocidade
+
+Para cada velocidade do vaavud, será coletado cinco amostras de RPM e feita média. A amostra será constante e em seguida que aparecer no visor, será esse o valor usado.
+
+Amostras 
+    Resistencia: 7k a 8k
+    
+    resistencia = [7, 7, 7, 7.3, 7.3, 7.3, 7.6, 7.6, 7.8, 8]
+    RPM:  [952.0200000000001, 921.1200000000001, 917.72, 935.1, 935.36, 929.3, 919.4200000000001, 939.9800000000001, 948.18, 951.5200000000001]
+    m/s: [17.2, 16.7, 16.6, 17.0, 17.1, 16.8, 16.7, 17.0, 17.1, 17.3]
+
+
+------------------Dia 18/12/2023------------------
+Amostras 
+    Resistencia: 8k a 9k
+    RPM:  [981.54, 990.9399999999999, 983.32, 1003.22, 1003.46, 1007.1600000000001, 1013.9400000000002, 1014.3, 1001.24, 995.0600000000001]
+    m/s: [17.8, 17.9, 18.0, 18.1, 18.3, 18.3, 18.4, 18.5, 18.3, 18.2]
+    Resistencia: [8.0, 8.1, 8.2, 8.3, 8.4, 8.5, 8.7, 8.8, 8.9, 9.0]
+
+
+Amostras 
+    Resistencia: 9k a 10k
+    RPM =  [1059.9199999999998, 1035.78, 1042.3799999999999, 1029.36, 1025.7800000000002, 1033.16, 1030.1599999999999, 1027.4599999999998, 1026.1, 1025.08]
+    m/s = [19.4, 18.8, 18.8, 18.6, 18.7, 18.8, 18.9, 18.6, 18.7, 18.5]
+    Resistencia = [9.0, 9.1, 9.2, 9.3, 9.4, 9.5, 9.7, 9.8, 9.9, 10.0]
+
+
+Amostras 
+    Resistencia: 5k a 6k
+    RPM =  [788.4, 798.28, 810.0, 821.6, 830.6199999999999, 840.26, 846.0600000000001, 853.8799999999999, 862.1600000000001, 874.4]
+    m/s = [14.3, 14.5, 14.6, 14.9, 15.2, 15.0, 15.3, 15.5, 15.7, 15.9]
+    Resistencia = [5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 6.0]
+
+
+Amostras 
+    Resistencia: 4k a 5k 
+    RPM =  [746.84, 713.3199999999999, 729.74, 738.64, 750.3, 760.7, 768.8199999999999, 798.8199999999999, 798.1600000000001, 789.8]
+    m/s = [12.7, 13.0, 13.2, 13.4, 13.6, 13.8, 14.0, 14.5, 14.4, 14.5]
+    Resistencia = [4.0, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 5.0, 5.0, 5.0]
+
+
+Amostras 
+    Resistencia: 5k a 6k
+    RPM =  [791.26, 789.8399999999999, 808.6800000000001, 810.2800000000001, 835.3799999999999, 837.9199999999998, 851.36, 847.8399999999999, 874.82, 873.7]
+    m/s = [14.4, 14.4, 14.6, 14.8, 15.3, 15.2, 15.5, 15.5, 15.9, 15.8]
+    Resistencia = [5.0, 5.0, 5.2, 5.2, 5.5, 5.5, 5.7, 5.7, 6.0, 6.0]
+
+
+Amostras 
+    Resistencia: 3k a 4k
+    RPM =  [581.84, 580.3199999999999, 578.5, 577.58, 582.7, 697.6800000000001, 700.88, 697.02, 695.74, 695.1600000000001]
+    m/s = [10.6, 10.5, 10.6, 10.5, 10.6, 12.7, 12.7, 12.7, 12.6, 12.7]
+    Resistencia = [3.0, 3.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 4.0, 4.0]
+
+
+Amostras 
+    Resistencia: 1k
+    RPM =  [260.7, 255.34, 254.95999999999998, 254.28000000000003, 251.82, 251.88000000000002, 249.68, 248.14000000000001, 248.76, 244.61999999999998]
+    m/s = [5.0, 4.8, 4.8, 4.8, 4.8, 4.8, 4.7, 4.8, 4.6, 4.5]
+    Resistencia = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+
+Amostras 
+    Resistencia: 1.5k
+    RPM =  [344.42, 342.8, 343.98, 341.18, 342.0, 343.97999999999996, 338.25999999999993, 337.49999999999994, 334.0, 336.65999999999997]
+    m/s = [6.4, 6.4, 6.4, 6.4, 6.4, 6.4, 6.3, 6.3, 6.3, 6.2]
+    Resistencia = [1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5]
+
+Amostras 
+    Resistencia: 2k
+    RPM =  [432.1, 433.62, 434.1, 435.08000000000004, 436.64, 437.71999999999997, 440.73999999999995, 436.28000000000003, 440.23999999999995, 437.52]
+    m/s = [8.0, 7.9, 8.0, 8.0, 8.0, 8.0, 8.0, 8.1, 8.1, 8.1]
+    Resistencia = [2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]
+
+Amostras 
+    Resistencia: 2.5k
+    RPM =  [500.76000000000005, 496.78000000000003, 500.84000000000003, 501.12, 501.6, 504.08000000000004, 502.78000000000003, 506.0, 506.08000000000004, 507.41999999999996]
+    M_S = [9.3, 9.2, 9.2, 9.2, 9.2, 9.2, 9.2, 9.2, 9.3, 9.3]
+    Resistencia = [2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5]
+
+Amostras 
+    Resistencia: 3k
+    RPM =  [569.62, 571.26, 576.4999999999999, 572.8199999999999, 573.4799999999999, 574.86, 573.8399999999999, 571.52, 573.54, 575.9]
+    M_S = [10.4, 10.4, 10.4, 10.4, 10.5, 10.5, 10.4, 10.5, 10.5, 10.4]
+    Resistencia = [3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0]
+
+
+Amostras 
+    Resistencia: 4k
+    RPM =  [692.86, 696.5600000000001, 689.28, 692.3199999999999, 692.6200000000001, 694.6800000000001, 695.04, 694.58, 694.7599999999999, 692.66]
+    M_S = [12.6, 12.5, 12.6, 12.6, 12.5, 12.6, 12.6, 12.5, 12.6, 12.6]
+    Resistencia = [4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0]
+
+
+
+------------------Dia 19/12/2023------------------
+Amostras 
+    Resistencia: 4.5k
+    RPM =  [728.32, 724.5200000000001, 728.4, 730.1600000000001, 726.7800000000001, 727.7, 727.36, 727.4000000000001, 728.2, 726.3399999999999]
+    M_S = [13.2, 13.2, 13.2, 13.2, 13.2, 13.2, 13.2, 13.2, 13.1, 13.2]
+    Resistencia = [4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5]
+
+Amostras 
+    Resistencia: 3.5k
+    rpm =  [616.96, 615.8800000000001, 618.5600000000001, 616.84, 616.76, 617.1800000000001, 615.16, 614.88, 615.7, 612.36]
+    m_s = [11.1, 11.2, 11.2, 11.2, 11.2, 11.3, 11.3, 11.2, 11.1, 11.2]
+    Resistencia = [3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5]
+
+Amostras 
+    Resistencia: 5k
+    rpm =  [780.36, 774.4200000000001, 779.1600000000001, 779.3799999999999, 779.6600000000001, 778.8799999999999, 777.9399999999999, 777.98, 777.2199999999999, 779.86]
+    m_s = [14.0, 14.2, 14.1, 14.2, 14.1, 14.1, 14.2, 14.2, 14.0, 14.1]
+    Resistencia = [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
+
+
+
+Resultado para 120 amostras
+Tamanho da amostra:  150
+    w minimo: 25.60356    m/s minimo:  4.5
+    w maximo: 110.9382933333333    m/s máximo:  19.4 
+
+    Media de freq. angular:        71.95933813333333
+    Desvio padrao de freq. angular: 23.613961587977695 
+
+    Equação da reta da regressão linear
+    [0.17117843]x + 0.19744649996588137
+    Equação da reta da regressão linear
+    [9.44670451]x + 29.20985132
+
+ 
+Total dos dados:
+    rpm = [981.54, 990.9399999999999, 983.32, 1003.22, 1003.46, 1007.1600000000001, 1013.9400000000002, 1014.3, 1001.24, 995.0600000000001,
+            952.0200000000001, 921.1200000000001, 917.72, 935.1, 935.36, 929.3, 919.4200000000001, 939.9800000000001, 948.18, 951.5200000000001,
+            788.4, 798.28, 810.0, 821.6, 830.6199999999999, 840.26, 846.0600000000001, 853.8799999999999, 862.1600000000001, 874.4,
+            791.26, 789.8399999999999, 808.6800000000001, 810.2800000000001, 835.3799999999999, 837.9199999999998, 851.36, 847.8399999999999, 874.82, 873.7,
+            260.7, 255.34, 254.95999999999998, 254.28000000000003, 251.82, 251.88000000000002, 249.68, 248.14000000000001, 248.76, 244.61999999999998,
+            432.1, 433.62, 434.1, 435.08000000000004, 436.64, 437.71999999999997, 440.73999999999995, 436.28000000000003, 440.23999999999995, 437.52,
+            344.42, 342.8, 343.98, 341.18, 342.0, 343.97999999999996, 338.25999999999993, 337.49999999999994, 334.0, 336.65999999999997,
+            500.76000000000005, 496.78000000000003, 500.84000000000003, 501.12, 501.6, 504.08000000000004, 502.78000000000003, 506.0, 506.08000000000004, 507.41999999999996,
+            569.62, 571.26, 576.4999999999999, 572.8199999999999, 573.4799999999999, 574.86, 573.8399999999999, 571.52, 573.54, 575.9,
+            692.86, 696.5600000000001, 689.28, 692.3199999999999, 692.6200000000001, 694.6800000000001, 695.04, 694.58, 694.7599999999999, 692.66,
+            728.32, 724.5200000000001, 728.4, 730.1600000000001, 726.7800000000001, 727.7, 727.36, 727.4000000000001, 728.2, 726.3399999999999,
+            1059.9199999999998, 1035.78, 1042.3799999999999, 1029.36, 1025.7800000000002, 1033.16, 1030.1599999999999, 1027.4599999999998, 1026.1, 1025.08,
+            746.84, 713.3199999999999, 729.74, 738.64, 750.3, 760.7, 768.8199999999999, 798.8199999999999, 798.1600000000001, 789.8,
+            616.96, 615.8800000000001, 618.5600000000001, 616.84, 616.76, 617.1800000000001, 615.16, 614.88, 615.7, 612.36,
+            780.36, 774.4200000000001, 779.1600000000001, 779.3799999999999, 779.6600000000001, 778.8799999999999, 777.9399999999999, 777.98, 777.2199999999999, 779.86]
+
+    m_s = [17.8, 17.9, 18.0, 18.1, 18.3, 18.3, 18.4, 18.5, 18.3, 18.2, 
+           17.2, 16.7, 16.6, 17.0, 17.1, 16.8, 16.7, 17.0, 17.1, 17.3,
+           14.3, 14.5, 14.6, 14.9, 15.2, 15.0, 15.3, 15.5, 15.7, 15.9,
+            14.4, 14.4, 14.6, 14.8, 15.3, 15.2, 15.5, 15.5, 15.9, 15.8,
+            5.0, 4.8, 4.8, 4.8, 4.8, 4.8, 4.7, 4.8, 4.6, 4.5,
+            8.0, 7.9, 8.0, 8.0, 8.0, 8.0, 8.0, 8.1, 8.1, 8.1,
+            6.4, 6.4, 6.4, 6.4, 6.4, 6.4, 6.3, 6.3, 6.3, 6.2,
+            9.3, 9.2, 9.2, 9.2, 9.2, 9.2, 9.2, 9.2, 9.3, 9.3,
+            10.4, 10.4, 10.4, 10.4, 10.5, 10.5, 10.4, 10.5, 10.5, 10.4,
+            12.6, 12.5, 12.6, 12.6, 12.5, 12.6, 12.6, 12.5, 12.6, 12.6,
+            13.2, 13.2, 13.2, 13.2, 13.2, 13.2, 13.2, 13.2, 13.1, 13.2,
+            19.4, 18.8, 18.8, 18.6, 18.7, 18.8, 18.9, 18.6, 18.7, 18.5,
+            12.7, 13.0, 13.2, 13.4, 13.6, 13.8, 14.0, 14.5, 14.4, 14.5,
+            11.1, 11.2, 11.2, 11.2, 11.2, 11.3, 11.3, 11.2, 11.1, 11.2,
+            14.0, 14.2, 14.1, 14.2, 14.1, 14.1, 14.2, 14.2, 14.0, 14.1]
+
+    resistencia = [8.0, 8.1, 8.2, 8.3, 8.4, 8.5, 8.7, 8.8, 8.9, 9.0,
+            7, 7, 7, 7.3, 7.3, 7.3, 7.6, 7.6, 7.8, 8,        
+            5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 6.0,
+            5.0, 5.0, 5.2, 5.2, 5.5, 5.5, 5.7, 5.7, 6.0, 6.0,
+            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+            2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
+            1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5,
+            2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5,
+            3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0,
+            4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0,
+            4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5,
+            9.0, 9.1, 9.2, 9.3, 9.4, 9.5, 9.7, 9.8, 9.9, 10.0,
+            4.0, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 5.0, 5.0, 5.0,
+            3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5,
+            5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
+
+
+
+------------------Dia 15/01/2024------------------
+
+Após alguns dias testando e analisando o comportamento de leitura do sensor Hall ao anemômetro, estamos chegando perto da calibração
+Ainda há algumas diferenças nas leituras da velocidade, no espaço que estamos usando de 0m/s á 21m/s, os valores mais extremos estão bem próximos, já os valores entre 10m/s e 17m/s variam até 2m/s, algumas vezes os valores são bem, similares.
+
+Código sendo usado:
+
+    const byte PulsesPerRevolution = 3; 
+    const unsigned long ZeroTimeout = 500000; 
+    // Calibration for smoothing RPM:
+    const byte numReadings = 15;  // Number of samples for smoothing. The higher, the more smoothing, but it's going to
+                                 // react slower to changes. 1 = no smoothing. Default: 2.
+
+    volatile unsigned long LastTimeWeMeasured;  // Stores the last time we measured a pulse so we can calculate the period.
+    volatile unsigned long PeriodBetweenPulses = ZeroTimeout+1000;  // Stores the period between pulses in microseconds.
+                           // It has a big number so it doesn't start with 0 which would be interpreted as a high frequency.
+    volatile unsigned long PeriodAverage = ZeroTimeout+1000;  // Stores the period between pulses in microseconds in total, if we are taking multiple pulses.
+                           // It has a big number so it doesn't start with 0 which would be interpreted as a high frequency.
+    unsigned long FrequencyRaw;  // Calculated frequency, based on the period. This has a lot of extra decimals without the decimal point.
+    unsigned long FrequencyReal;  // Frequency without decimals.
+    unsigned long RPM;  // Raw RPM without any processing.
+    unsigned int PulseCounter = 1;  // Counts the amount of pulse readings we took so we can average multiple pulses before calculating the period.
+
+    unsigned long PeriodSum; // Stores the summation of all the periods to do the average.
+
+    unsigned long LastTimeCycleMeasure = LastTimeWeMeasured;  // Stores the last time we measure a pulse in that cycle.
+                                        // We need a variable with a value that is not going to be affected by the interrupt
+                                        // because we are going to do math and functions that are going to mess up if the values
+                                        // changes in the middle of the cycle.
+    unsigned long CurrentMicros = micros();  // Stores the micros in that cycle.
+                                             // We need a variable with a value that is not going to be affected by the interrupt
+                                             // because we are going to do math and functions that are going to mess up if the values
+                                             // changes in the middle of the cycle.
+
+    // We get the RPM by measuring the time between 2 or more pulses so the following will set how many pulses to
+    // take before calculating the RPM. 1 would be the minimum giving a result every pulse, which would feel very responsive
+    // even at very low speeds but also is going to be less accurate at higher speeds.
+    // With a value around 10 you will get a very accurate result at high speeds, but readings at lower speeds are going to be
+    // farther from eachother making it less "real time" at those speeds.
+    // There's a function that will set the value depending on the speed so this is done automatically.
+    unsigned int AmountOfReadings = 1;
+
+    unsigned int ZeroDebouncingExtra;  // Stores the extra value added to the ZeroTimeout to debounce it.
+                                       // The ZeroTimeout needs debouncing so when the value is close to the threshold it
+                                       // doesn't jump from 0 to the value. This extra value changes the threshold a little
+                                       // when we show a 0.
+
+    // Variables for smoothing tachometer:
+    unsigned long readings[numReadings];  // The input.
+    unsigned long readIndex;  // The index of the current reading.
+    unsigned long total;  // The running total.
+    unsigned long average;  // The RPM value after applying the smoothing.
+
+    // Freqeuncia angular
+    unsigned long FrequenciaAng;
+    float calibracao = (1.53)*2*3.14/60;
+    // Velocdade inicial
+    float Velocidade;
+
+    // OLED 0.96" Display:
+    #include <Adafruit_GFX.h>  // Include core graphics library for the display.
+    #include <Adafruit_SSD1306.h>  // Include Adafruit_SSD1306 library to drive the display.Adafruit_SSD1306 display(128, 64);  // Create display.
+    #include <Fonts/FreeMonoBold18pt7b.h>  // Add a custom font.
+    //
+    #define SCREEN_WIDTH 128
+    #define SCREEN_HEIGHT 64
+    Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+    void setup()  // Start of setup:
+    {
+
+      Serial.begin(9600);  // Begin serial communication.
+      attachInterrupt(digitalPinToInterrupt(2), Pulse_Event, RISING);  // Enable interruption pin 2 when going from LOW to HIGH.
+
+      delay(1000);
+
+
+      // OLED 0.96" Display:
+      display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // Initialize display with the I2C address of 0x3C.
+      display.clearDisplay();  // Clear the buffer.
+      display.setTextColor(WHITE);  // Set color of the text to white.
+      display.setRotation(0);  // Set orientation. Goes from 0, 1, 2 or 3.
+      display.setTextWrap(false);  // By default, long lines of text are set to automatically “wrap” back to the leftmost column.
+                                   // To override this behavior (so text will run off the right side of the display - useful for
+                                   // scrolling marquee effects), use setTextWrap(false). The normal wrapping behavior is restored
+                                   // with setTextWrap(true).
+      display.dim(0);  // Set brightness (0 is maximum and 1 is a little dim).
+      
+    }
+
+
+    void loop()  // Start of loop:
+    {
+      LastTimeCycleMeasure = LastTimeWeMeasured;  // Store the LastTimeWeMeasured in a variable.
+      CurrentMicros = micros();  // Store the micros() in a variable.
+
+      if(CurrentMicros < LastTimeCycleMeasure)
+      {
+        LastTimeCycleMeasure = CurrentMicros;
+      }
+
+      // Calculate the frequency:
+      FrequencyRaw = 10000000000 / PeriodAverage;  // Calculate the frequency using the period between pulses.
+
+      // Detect if pulses stopped or frequency is too low, so we can show 0 Frequency:
+      if(PeriodBetweenPulses > ZeroTimeout - ZeroDebouncingExtra || CurrentMicros - LastTimeCycleMeasure > ZeroTimeout - ZeroDebouncingExtra)
+      {  // If the pulses are too far apart that we reached the timeout for zero:
+        FrequencyRaw = 0;  // Set frequency as 0.
+        ZeroDebouncingExtra = 2000;  // Change the threshold a little so it doesn't bounce.
+      }
+      else
+      {
+        ZeroDebouncingExtra = 0;  // Reset the threshold to the normal value so it doesn't bounce.
+      }
+
+      FrequencyReal = FrequencyRaw / 10000;  // Get frequency without decimals.
+                                            
+      // Calculate the RPM:
+      RPM = FrequencyRaw / PulsesPerRevolution * 60;  // Frequency divided by amount of pulses per revolution multiply by
+                                                      // 60 seconds to get minutes.
+      RPM = RPM / 10000;  // Remove the decimals.
+
+      // Smoothing RPM:
+      total = total - readings[readIndex];  // Advance to the next position in the array.
+      readings[readIndex] = RPM;  // Takes the value that we are going to smooth.
+      total = total + readings[readIndex];  // Add the reading to the total.
+      readIndex = readIndex + 1;  // Advance to the next position in the array.
+
+      if (readIndex >= numReadings)  // If we're at the end of the array:
+      {
+        readIndex = 0;  // Reset array index.
+      }
+      
+      // Calculate the average:
+      average = total / numReadings;  // The average value it's the smoothed result.
+      
+
+      FrequenciaAng = calibracao * average;
+      Velocidade = 0.17128525*FrequenciaAng + 0.2037372;
+
+      Serial.print("FreqAng: ");
+      Serial.print(FrequenciaAng);
+      Serial.print("\tVelocidade: ");
+      Serial.println(Velocidade);
+
+      
+      // OLED 0.96" Display:
+      // Convert variable into a string, so we can change the text alignment to the right:
+      // It can be also used to add or remove decimal numbers.
+       char string[10];  // Create a character array of 10 characters
+      // Convert float to a string:
+      dtostrf(Velocidade, 6, 0, string);  // (<variable>,<amount of digits we are going to use>,<amount of decimal digits>,<string name>)
+
+      display.clearDisplay();  // Clear the display so we can refresh.
+      display.setFont(&FreeMonoBold18pt7b);  // Set a custom font.
+      display.setTextSize(0);  // Set text size. We are using a custom font so you should always use the text size of 0.
+      display.setCursor(0, 25);  // (x,y).
+      display.println("Vel:");  // Text or value to print.
+
+      // Print variable with right alignment:
+      display.setCursor(0, 60);  // (x,y).
+      display.println(string);  // Text or value to print.
+
+      // Print a comma for the thousands separator:
+      if(average > 999)  // If value is above 999:
+      {
+        // Draw line (to show a comma):
+        display.drawLine(63, 60, 61, 65, WHITE);  // Draw line (x0,y0,x1,y1,color).
+      }
+
+      display.display();  // Print everything we set previously.
+      delay(10);
+    }  // End of loop.
+
+
+
+
+     
+    void Pulse_Event()  // The interrupt runs this to calculate the period between pulses:
+    {
+
+      PeriodBetweenPulses = micros() - LastTimeWeMeasured;  
+
+      LastTimeWeMeasured = micros();  // Stores the current micros so the next time we have a pulse we would have something to compare with.
+
+      if(PulseCounter >= AmountOfReadings)  // If counter for amount of readings reach the set limit:
+      {
+        PeriodAverage = PeriodSum / AmountOfReadings;  // Calculate the final period dividing the sum of all readings by the
+                                                       // amount of readings to get the average.
+        PulseCounter = 1;  // Reset the counter to start over. The reset value is 1 because its the minimum setting allowed (1 reading).
+        PeriodSum = PeriodBetweenPulses;  // Reset PeriodSum to start a new averaging operation.
+
+        int RemapedAmountOfReadings = map(PeriodBetweenPulses, 40000, 5000, 1, 10);  // Remap the period range to the reading range.
+        
+        RemapedAmountOfReadings = constrain(RemapedAmountOfReadings, 1, 10);  // Constrain the value so it doesn't go below or above the limits.
+        AmountOfReadings = RemapedAmountOfReadings;  // Set amount of readings as the remaped value.
+      }
+      else
+      {
+        PulseCounter++;  // Increase the counter for amount of readings by 1.
+        PeriodSum = PeriodSum + PeriodBetweenPulses;  // Add the periods so later we can average.
+      }
+
+    }  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

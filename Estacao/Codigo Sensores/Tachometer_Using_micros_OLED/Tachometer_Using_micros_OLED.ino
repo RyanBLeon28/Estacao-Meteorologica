@@ -205,7 +205,7 @@ void loop()  // Start of loop:
 
 
 
-  // Smoothing RPM:
+   
   total = total - readings[readIndex];  // Advance to the next position in the array.
   readings[readIndex] = RPM;  // Takes the value that we are going to smooth.
   total = total + readings[readIndex];  // Add the reading to the total.
