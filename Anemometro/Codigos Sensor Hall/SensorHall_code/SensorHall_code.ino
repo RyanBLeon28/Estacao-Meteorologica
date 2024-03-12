@@ -9,9 +9,9 @@
 //  * SDA = A4
 
 const byte PulsesPerRevolution = 3; 
-const unsigned long ZeroTimeout = 500000; 
+const unsigned long ZeroTimeout = 200000; 
 // Calibration for smoothing RPM:
-const byte numReadings = 20;  // Number of samples for smoothing. The higher, the more smoothing, but it's going to
+const byte numReadings = 30;  // Number of samples for smoothing. The higher, the more smoothing, but it's going to
                              // react slower to changes. 1 = no smoothing. Default: 2.
 
 volatile unsigned long LastTimeWeMeasured;  // Stores the last time we measured a pulse so we can calculate the period.
@@ -22,6 +22,7 @@ volatile unsigned long PeriodAverage = ZeroTimeout+1000;  // Stores the period b
 unsigned long FrequencyRaw;  // Calculated frequency, based on the period. This has a lot of extra decimals without the decimal point.
 unsigned long FrequencyReal;  // Frequency without decimals.
 unsigned long RPM;  // Raw RPM without any processing.
+float vel; 
 unsigned int PulseCounter = 1;  // Counts the amount of pulse readings we took so we can average multiple pulses before calculating the period.
 
 unsigned long PeriodSum; // Stores the summation of all the periods to do the average.
@@ -96,13 +97,29 @@ void Pulse_Event()  // The interrupt runs this to calculate the period between p
 }
 
 
+// OLED 0.96" Display:
+#include <Adafruit_GFX.h>  // Include core graphics library for the display.
+#include <Adafruit_SSD1306.h>  // Include Adafruit_SSD1306 library to drive the display.
+Adafruit_SSD1306 display(128, 64);  // Create display.
+#include <Fonts/FreeMonoBold18pt7b.h>  // Add a custom font.
+
 
 void setup() {
   Serial.begin(9600);
-  Serial.println(F("DHTxx test!"));
 
-  attachInterrupt(digitalPinToInterrupt(3), Pulse_Event, RISING);  // Enable interruption pin 2 when going from LOW to HIGH.
+  attachInterrupt(digitalPinToInterrupt(2), Pulse_Event, RISING);  // Enable interruption pin 2 when going from LOW to HIGH.
 
+  // OLED 0.96" Display:
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // Initialize display with the I2C address of 0x3C.
+  display.clearDisplay();  // Clear the buffer.
+  display.setTextColor(WHITE);  // Set color of the text to white.
+  display.setRotation(0);  // Set orientation. Goes from 0, 1, 2 or 3.
+  display.setTextWrap(false);  // By default, long lines of text are set to automatically “wrap” back to the leftmost column.
+                               // To override this behavior (so text will run off the right side of the display - useful for
+                               // scrolling marquee effects), use setTextWrap(false). The normal wrapping behavior is restored
+                               // with setTextWrap(true).
+  display.dim(0);  // Set brightness (0 is maximum and 1 is a little dim).
+  
 }
 
 void loop() {
@@ -152,15 +169,40 @@ void loop() {
 
 
   //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-  //Serial.print("RPM: ");
-  //Serial.println(RPM);
   Serial.print("Velocidade: ");
-  //2*3,14*0.067 = 0.420973416
-  Serial.print((RPM*0.420973416)/60);
+  // //2*3,14*0.067 = 0.420973416
+  vel = ((average*0.420973416)/60)*4.2;
+  Serial.print(vel);
   Serial.println(" m/s");
 
 
-  delay(700);
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  // OLED 0.96" Display:
+  // Convert variable into a string, so we can change the text alignment to the right:
+  // It can be also used to add or remove decimal numbers.
+   char string[10];  // Create a character array of 10 characters
+  // Convert float to a string:
+  dtostrf(vel, 6, 0, string);  // (<variable>,<amount of digits we are going to use>,<amount of decimal digits>,<string name>)
+
+  display.clearDisplay();  // Clear the display so we can refresh.
+  display.setFont(&FreeMonoBold18pt7b);  // Set a custom font.
+  display.setTextSize(0);  // Set text size. We are using a custom font so you should always use the text size of 0.
+  display.setCursor(0, 25);  // (x,y).
+  display.println("Vel:");  // Text or value to print.
+
+  // Print variable with right alignment:
+  display.setCursor(0, 60);  // (x,y).
+  display.println(string);  // Text or value to print.
+
+  // Print a comma for the thousands separator:
+  if(average > 999)  // If value is above 999:
+  {
+    // Draw line (to show a comma):
+    display.drawLine(63, 60, 61, 65, WHITE);  // Draw line (x0,y0,x1,y1,color).
+  }
+
+  display.display();  // Print everything we set previously.
+  delay(10);
 }
 
 
