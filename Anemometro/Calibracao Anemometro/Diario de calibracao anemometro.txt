@@ -122,7 +122,7 @@ Tamanho da amostra:  150
     w minimo: 25.60356    m/s minimo:  4.5
     w maximo: 110.9382933333333    m/s máximo:  19.4 
 
-    Media de freq. angular:        71.95933813333333
+    Media de freq. angular:         71.95933813333333
     Desvio padrao de freq. angular: 23.613961587977695 
 
     Equação da reta da regressão linear
