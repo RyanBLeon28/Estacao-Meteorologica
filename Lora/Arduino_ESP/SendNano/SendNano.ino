@@ -1,17 +1,64 @@
+/* 
+  
+  The tachometer's code to get RPM was made by InterlinkKnight. Last update: 05/23/2019
+  
+  To find all of Weather Station:
+    GitHub: https://github.com/RyanBLeon28/Estacao-Meteorologica
+    Last update: 08/04/2024
+*/
 
-// ///// OLED 0.96" Display:
-// We are going to use the OLED 128x64 I2C with SSD1306 driver using the Adafruit library.
+// ====================================================================================================================================
+// --- Including libraries ---
+#include "Wire.h"
+#include <Adafruit_Sensor.h>            
+#include <Adafruit_BMP280.h>
+#include "DHT.h"
+#include "EBYTE.h"
+#include <SoftwareSerial.h>
 
-// Pins for OLED display and arduino uno/nano:
-//  * GND = GND
-//  * VCC = 5V
-//  * SCL = A5
-//  * SDA = A4
+// ====================================================================================================================================
+// --- Pins declaration of Lora ---
+#define PIN_RX 7                       // TX Lora module
+#define PIN_TX 3                       // RX Lora module
+#define PIN_M0 4                       // M0 Lora module
+#define PIN_M1 5                       // M1 Lora module
+#define PIN_AX 6                       // AUX Lora module
 
+#define DHTPIN 8                       // Digital pin connected to the DHT sensor
+#define DHTTYPE DHT11                  // DHT 11
+DHT dht(DHTPIN, DHTTYPE);
+Adafruit_BMP280 bmp;                   // SDA - A4  ; SCL - A5 (I2C)
+const int ledPin = 11;                 // Digital pin connected to the LED
+
+// ====================================================================================================================================
+// --- Interval to send data by LoRa module ---
+unsigned long previousMillis = 0;   // Armazena o tempo do último print
+const long interval = 5000; 
+// ====================================================================================================================================
+// --- Struct with station data ---
+struct DATA {
+  float Temp;
+  float Humid;
+  float Press;
+  float Altitude;
+  float Speed;
+};
+
+int Chan;
+DATA StationA;
+unsigned long Last;
+
+// you will need to define the pins to create the serial port
+SoftwareSerial ESerial(PIN_RX, PIN_TX);
+
+// create the transceiver object, passing in the serial and pins
+EBYTE Transceiver(&ESerial, PIN_M0, PIN_M1, PIN_AX);
+
+// ====================================================================================================================================
 const byte PulsesPerRevolution = 3; 
-const unsigned long ZeroTimeout = 200000; 
+const unsigned long ZeroTimeout = 500000; 
 // Calibration for smoothing RPM:
-const byte numReadings = 30;  // Number of samples for smoothing. The higher, the more smoothing, but it's going to
+const byte numReadings = 10;  // Number of samples for smoothing. The higher, the more smoothing, but it's going to
                              // react slower to changes. 1 = no smoothing. Default: 2.
 
 volatile unsigned long LastTimeWeMeasured;  // Stores the last time we measured a pulse so we can calculate the period.
@@ -22,7 +69,6 @@ volatile unsigned long PeriodAverage = ZeroTimeout+1000;  // Stores the period b
 unsigned long FrequencyRaw;  // Calculated frequency, based on the period. This has a lot of extra decimals without the decimal point.
 unsigned long FrequencyReal;  // Frequency without decimals.
 unsigned long RPM;  // Raw RPM without any processing.
-float vel; 
 unsigned int PulseCounter = 1;  // Counts the amount of pulse readings we took so we can average multiple pulses before calculating the period.
 
 unsigned long PeriodSum; // Stores the summation of all the periods to do the average.
@@ -55,25 +101,18 @@ unsigned long readIndex;  // The index of the current reading.
 unsigned long total;  // The running total.
 unsigned long average;  // The RPM value after applying the smoothing.
 
-
-
-
 void Pulse_Event()  // The interrupt runs this to calculate the period between pulses:
 {
   PeriodBetweenPulses = micros() - LastTimeWeMeasured;  // Current "micros" minus the old "micros" when the last pulse happens.
                                                         // This will result with the period (microseconds) between both pulses.
                                                         // The way is made, the overflow of the "micros" is not going to cause any issue.
-
   LastTimeWeMeasured = micros();  // Stores the current micros so the next time we have a pulse we would have something to compare with.
-
   if(PulseCounter >= AmountOfReadings)  // If counter for amount of readings reach the set limit:
   {
     PeriodAverage = PeriodSum / AmountOfReadings;  // Calculate the final period dividing the sum of all readings by the
                                                    // amount of readings to get the average.
     PulseCounter = 1;  // Reset the counter to start over. The reset value is 1 because its the minimum setting allowed (1 reading).
-    PeriodSum = PeriodBetweenPulses;  // Reset PeriodSum to start a new averaging operation.
-
-
+    PeriodSum = PeriodBetweenPulses;  // Reset PeriodSum to start a new averaging operation
     // Change the amount of readings depending on the period between pulses.
     // To be very responsive, ideally we should read every pulse. The problem is that at higher speeds the period gets
     // too low decreasing the accuracy. To get more accurate readings at higher speeds we should get multiple pulses and
@@ -93,54 +132,55 @@ void Pulse_Event()  // The interrupt runs this to calculate the period between p
     PulseCounter++;  // Increase the counter for amount of readings by 1.
     PeriodSum = PeriodSum + PeriodBetweenPulses;  // Add the periods so later we can average.
   }
-
 }
-
-
-// OLED 0.96" Display:
-#include <Adafruit_GFX.h>  // Include core graphics library for the display.
-#include <Adafruit_SSD1306.h>  // Include Adafruit_SSD1306 library to drive the display.
-Adafruit_SSD1306 display(128, 64);  // Create display.
-#include <Fonts/FreeMonoBold18pt7b.h>  // Add a custom font.
-
 
 void setup() {
   Serial.begin(9600);
-
-  attachInterrupt(digitalPinToInterrupt(8), Pulse_Event, RISING);  // Enable interruption pin 2 when going from LOW to HIGH.
-
-  // OLED 0.96" Display:
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // Initialize display with the I2C address of 0x3C.
-  display.clearDisplay();  // Clear the buffer.
-  display.setTextColor(WHITE);  // Set color of the text to white.
-  display.setRotation(0);  // Set orientation. Goes from 0, 1, 2 or 3.
-  display.setTextWrap(false);  // By default, long lines of text are set to automatically “wrap” back to the leftmost column.
-                               // To override this behavior (so text will run off the right side of the display - useful for
-                               // scrolling marquee effects), use setTextWrap(false). The normal wrapping behavior is restored
-                               // with setTextWrap(true).
-  display.dim(0);  // Set brightness (0 is maximum and 1 is a little dim).
+  // ====================================================================================================================================
+  // Define o pino do LED como saída
+  pinMode(ledPin, OUTPUT);
+  // ====================================================================================================================================
+  ESerial.begin(9600);
+  Transceiver.init();
+  Chan = 23;
+  Transceiver.SetChannel(Chan);
+  Transceiver.SetAddressH(0xAA);
+  Transceiver.SetAddressL(0xAA);
+  Transceiver.PrintParameters();
+  // ====================================================================================================================================
+  // Teste BPM280
+  if(!bmp.begin(0x76)){ //SE O SENSOR NÃO FOR INICIALIZADO NO ENDEREÇO I2C 0x76, FAZ
+    Serial.println(F("Sensor BMP280 não foi identificado! Verifique as conexões.")); //IMPRIME O TEXTO NO MONITOR SERIAL
+    while(1); //SEMPRE ENTRE NO LOOP
+  }
+  // ====================================================================================================================================
+  // Teste DHT11
+  //Serial.println(F("DHTxx test!"));
+  delay(100);
+  dht.begin();
+  // ====================================================================================================================================
+  attachInterrupt(digitalPinToInterrupt(2), Pulse_Event, RISING);  // Enable interruption pin 2 when going from LOW to HIGH.
   
+  // ====================================================================================================================================
+  // Setup is ready
+  Serial.println("Setup stationA");
+  delay(1000); 
 }
 
 void loop() {
-  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-  // The following is going to store the two values that might change in the middle of the cycle.
-  // We are going to do math and functions with those values and they can create glitches if they change in the
-  // middle of the cycle.
+  // ====================================================================================================================================
+  unsigned long currentMillis = millis(); // Obtém o tempo atual
+
   LastTimeCycleMeasure = LastTimeWeMeasured;  // Store the LastTimeWeMeasured in a variable.
   CurrentMicros = micros();  // Store the micros() in a variable.
 
-  // CurrentMicros should always be higher than LastTimeWeMeasured, but in rare occasions that's not true.
-  // I'm not sure why this happens, but my solution is to compare both and if CurrentMicros is lower than
-  // LastTimeCycleMeasure I set it as the CurrentMicros.
-  // The need of fixing this is that we later use this information to see if pulses stopped.
   if(CurrentMicros < LastTimeCycleMeasure)
   {
     LastTimeCycleMeasure = CurrentMicros;
   }
-
-  // Calculate the frequency:
-  FrequencyRaw = 10000000000 / PeriodAverage;if(PeriodBetweenPulses > ZeroTimeout - ZeroDebouncingExtra || CurrentMicros - LastTimeCycleMeasure > ZeroTimeout - ZeroDebouncingExtra)
+  FrequencyRaw = 10000000000 / PeriodAverage;  // Calculate the frequency using the period between pulses.
+  // Detect if pulses stopped or frequency is too low, so we can show 0 Frequency:
+  if(PeriodBetweenPulses > ZeroTimeout - ZeroDebouncingExtra || CurrentMicros - LastTimeCycleMeasure > ZeroTimeout - ZeroDebouncingExtra)
   {  // If the pulses are too far apart that we reached the timeout for zero:
     FrequencyRaw = 0;  // Set frequency as 0.
     ZeroDebouncingExtra = 2000;  // Change the threshold a little so it doesn't bounce.
@@ -149,10 +189,12 @@ void loop() {
   {
     ZeroDebouncingExtra = 0;  // Reset the threshold to the normal value so it doesn't bounce.
   }
-  FrequencyReal = FrequencyRaw / 10000;
+  FrequencyReal = FrequencyRaw / 10000;  // Get frequency without decimals.
+  
   // Calculate the RPM:
-  RPM = FrequencyRaw / PulsesPerRevolution * 60;  
-  RPM = RPM / 10000;  // Remove the decimals.
+  RPM = FrequencyRaw / PulsesPerRevolution * 60;  // Frequency divided by amount of pulses per revolution multiply by
+                                                  // 60 seconds to get minutes.
+  RPM = RPM / 10000;  // Remove the decimals.  
   total = total - readings[readIndex];  // Advance to the next position in the array.
   readings[readIndex] = RPM;  // Takes the value that we are going to smooth.
   total = total + readings[readIndex];  // Add the reading to the total.
@@ -162,56 +204,40 @@ void loop() {
   {
     readIndex = 0;  // Reset array index.
   }
-  
   // Calculate the average:
-  average = total / numReadings;  // The average value it's the smoothed result.
-
-
-
-  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-  Serial.print("Velocidade: ");
-  // //2*3,14*0.067 = 0.420973416
-  vel = ((average*0.420973416)/60)*4.2;
-  Serial.print(vel);
-  Serial.println(" m/s");
-
-
-  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-  // OLED 0.96" Display:
-  // Convert variable into a string, so we can change the text alignment to the right:
-  // It can be also used to add or remove decimal numbers.
-   char string[10];  // Create a character array of 10 characters
-  // Convert float to a string:
-  dtostrf(vel, 6, 0, string);  // (<variable>,<amount of digits we are going to use>,<amount of decimal digits>,<string name>)
-
-  display.clearDisplay();  // Clear the display so we can refresh.
-  display.setFont(&FreeMonoBold18pt7b);  // Set a custom font.
-  display.setTextSize(0);  // Set text size. We are using a custom font so you should always use the text size of 0.
-  display.setCursor(0, 25);  // (x,y).
-  display.println("Vel:");  // Text or value to print.
-
-  // Print variable with right alignment:
-  display.setCursor(0, 60);  // (x,y).
-  display.println(string);  // Text or value to print.
-
-  // Print a comma for the thousands separator:
-  if(average > 999)  // If value is above 999:
-  {
-    // Draw line (to show a comma):
-    display.drawLine(63, 60, 61, 65, WHITE);  // Draw line (x0,y0,x1,y1,color).
+  average = total / numReadings;
+  // (2*3,14*average) / 60 = 0.420973416
+  //float freqAng = (2*3,14*average) / 60
+  // Equação da reta da regressão linear: [0.17117843]x + 0.19744649996588137, onde x é freq angular
+  float freqAngX = 0.017916676*average; 
+  float vel = freqAngX + 0.19744649996588137;
+  //float vel = ((0.17117843)((0.104667*average)) + 0.19744649996588137;
+  
+  // ====================================================================================================================================
+  // Lora comunication
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+  
+    // measure some data and save to the structure
+    StationA.Temp = (float(dht.readTemperature()) + float(bmp.readTemperature()) ) / 2;
+    StationA.Humid = float(dht.readHumidity());
+    StationA.Press =  bmp.readPressure()/100;
+    StationA.Altitude = bmp.readAltitude(1013.25);
+    StationA.Speed = vel; // m/s
+    Transceiver.SendStruct(&StationA, sizeof(StationA));
+    digitalWrite(ledPin, HIGH);
+    
+    Serial.println();
+    Serial.println("    Enviado:  "); 
+    Serial.print("Temperature: "); Serial.print(StationA.Temp);Serial.println(" ºC");
+    Serial.print("Humidy:      "); Serial.print(StationA.Humid);Serial.println(" %");
+    Serial.print("Press:     "); Serial.print(StationA.Press);Serial.println(" Pa");
+    Serial.print("Altitude:   "); Serial.print(StationA.Altitude);Serial.println(" m");
+    Serial.print("Wind speed:  "); Serial.print(StationA.Speed);Serial.println(" m/s");
+    Serial.print("-------------------------------------");
+    delay(300);
+    digitalWrite(ledPin, LOW);
   }
 
-  display.display();  // Print everything we set previously.
-  delay(10);
+  delay(100);
 }
-
-
-
-
-
-
-
-
-
-
-

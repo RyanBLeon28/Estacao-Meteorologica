@@ -1,22 +1,27 @@
-#include <
- 
-const int pinoDHT11 = A2; //PINO ANALÓGICO UTILIZADO PELO DHT11
- 
-dht DHT; //VARIÁVEL DO TIPO DHT
- 
+#include "DHT.h"
+#define DHTPIN 8                       // Digital pin connected to the DHT sensor
+#define DHTTYPE DHT11                  // DHT 11
+DHT dht(DHTPIN, DHTTYPE);
+
 void setup(){
   Serial.begin(9600); //INICIALIZA A SERIAL
+    // Teste DHT11
+  Serial.println(F("DHTxx test!"));
+  dht.begin();
+
   delay(2000); //INTERVALO DE 2 SEGUNDO ANTES DE INICIAR
 }
  
 void loop(){
-  DHT.read11(pinoDHT11); //LÊ AS INFORMAÇÕES DO SENSOR
-  Serial.print("Umidade: "); //IMPRIME O TEXTO NA SERIAL
-  Serial.print(DHT.humidity); //IMPRIME NA SERIAL O VALOR DE UMIDADE MEDIDO
-  Serial.print("%"); //ESCREVE O TEXTO EM SEGUIDA
-  Serial.print(" / Temperatura: "); //IMPRIME O TEXTO NA SERIAL
-  Serial.print(DHT.temperature, 0); //IMPRIME NA SERIAL O VALOR DE UMIDADE MEDIDO E REMOVE A PARTE DECIMAL
-  Serial.println("*C"); //IMPRIME O TEXTO NA SERIAL
+  float h = dht.readHumidity();
+  // Read temperature as Celsius (the default)
+  float t = dht.readTemperature();
+
+  Serial.println();
+  Serial.print(F("Humidity: "));
+  Serial.print(h);
+  Serial.print(F("%  Temperature: "));
+  Serial.print(t);
+  Serial.println(F("°C "));
   delay(2000); //INTERVALO DE 2 SEGUNDOS * NÃO DIMINUIR ESSE VALOR
-}
 }
