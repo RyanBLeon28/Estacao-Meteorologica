@@ -4,17 +4,18 @@
   
   To find all of Weather Station:
     GitHub: https://github.com/RyanBLeon28/Estacao-Meteorologica
-    Last update: 08/04/2024
+    Last update: 23/04/2024
 */
 
 // ====================================================================================================================================
 // --- Including libraries ---
+#include "DHT.h"
 #include "Wire.h"
+#include "EBYTE.h"
+#include "AS5600.h"
+#include <SoftwareSerial.h>
 #include <Adafruit_Sensor.h>            
 #include <Adafruit_BMP280.h>
-#include "DHT.h"
-#include "EBYTE.h"
-#include <SoftwareSerial.h>
 
 // ====================================================================================================================================
 // --- Pins declaration of Lora ---
@@ -28,11 +29,12 @@
 #define DHTTYPE DHT11                  // DHT 11
 DHT dht(DHTPIN, DHTTYPE);
 Adafruit_BMP280 bmp;                   // SDA - A4  ; SCL - A5 (I2C)
+AS5600 as5600_0(&Wire);                // AS5600 sensor configuration 
 const int ledPin = 11;                 // Digital pin connected to the LED
 
 // ====================================================================================================================================
 // --- Interval to send data by LoRa module ---
-unsigned long previousMillis = 0;   // Armazena o tempo do último print
+unsigned long previousMillis = 0;      // Armazena o tempo do último print
 const long interval = 5000; 
 // ====================================================================================================================================
 // --- Struct with station data ---
@@ -42,6 +44,7 @@ struct DATA {
   float Press;
   float Altitude;
   float Speed;
+  float Direction;
 };
 
 int Chan;
@@ -148,6 +151,16 @@ void setup() {
   Transceiver.SetAddressL(0xAA);
   Transceiver.PrintParameters();
   // ====================================================================================================================================
+  // Teste AS5600
+  Serial.println(__FILE__);
+  Serial.print("AS5600_LIB_VERSION: ");
+  Serial.println(AS5600_LIB_VERSION);
+  Wire.begin();
+  as5600_0.begin();  //  set direction pin.
+  as5600_0.setDirection(AS5600_CLOCK_WISE);
+  Serial.print("Connect device 0: ");
+  Serial.println(as5600_0.isConnected() ? "true" : "false");
+  // ====================================================================================================================================
   // Teste BPM280
   if(!bmp.begin(0x76)){ //SE O SENSOR NÃO FOR INICIALIZADO NO ENDEREÇO I2C 0x76, FAZ
     Serial.println(F("Sensor BMP280 não foi identificado! Verifique as conexões.")); //IMPRIME O TEXTO NO MONITOR SERIAL
@@ -224,6 +237,9 @@ void loop() {
     StationA.Press =  bmp.readPressure()/100;
     StationA.Altitude = bmp.readAltitude(1013.25);
     StationA.Speed = vel; // m/s
+    StationA.Direction = as5600_0.readAngle() * 0.087912;
+
+    // Sending to Master station
     Transceiver.SendStruct(&StationA, sizeof(StationA));
     digitalWrite(ledPin, HIGH);
     
@@ -234,6 +250,7 @@ void loop() {
     Serial.print("Press:     "); Serial.print(StationA.Press);Serial.println(" Pa");
     Serial.print("Altitude:   "); Serial.print(StationA.Altitude);Serial.println(" m");
     Serial.print("Wind speed:  "); Serial.print(StationA.Speed);Serial.println(" m/s");
+    Serial.print("Wind direc:  "); Serial.print(StationA.Direction);Serial.println(" Degrees");
     Serial.print("-------------------------------------");
     delay(300);
     digitalWrite(ledPin, LOW);

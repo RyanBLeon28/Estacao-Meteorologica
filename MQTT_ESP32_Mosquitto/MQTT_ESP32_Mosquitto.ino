@@ -30,6 +30,7 @@ struct DATA {
   float Press;
   float Altitude;
   float Speed;
+  float Direction;
 };
 
 int Chan;
@@ -44,8 +45,10 @@ EBYTE Transceiver(&Serial2, PIN_M0, PIN_M1, PIN_AX);
 // --- Conect wifi ---
 // const char* ssid     = "Sala_J13";
 // const char* password = "salaj132023";
-const char* ssid = "iphone Carolina (2)";
-const char* password = "Carolina1999";
+// const char* ssid = "iphone Carolina (2)";
+// const char* password = "Carolina1999";
+const char* ssid = "A9";
+const char* password = "12345678";
 
 const char* mqtt_server = "test.mosquitto.org";
 
@@ -137,7 +140,7 @@ void reconnect(unsigned long Last) {
   }
 }
 
-void displayFunction(float temp, float humid, float speed, float altitude, float press) {
+void displayFunction(float temp, float humid, float speed, float altitude, float press,float direction) {
   display.clearDisplay();
   display.setCursor(45, 0);
   display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
@@ -159,6 +162,9 @@ void displayFunction(float temp, float humid, float speed, float altitude, float
   display.setCursor(0, 50);
   display.print("P:"); display.print(press); display.println("Pa");
 
+  display.setCursor(70, 50);
+  display.print("D:"); display.print(direction); display.println("º");
+  
   display.display();
 }
 
@@ -169,7 +175,7 @@ void displaySearchingData(){
   display.print("MASTER");
 
   display.setCursor(10, 20);
-  display.println("Searching LoRa data...");
+  display.println("Searching for         data...");
   display.display();
   delay(1500);
   display.clearDisplay();
@@ -220,7 +226,7 @@ void setup() {
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
   display.setCursor(0, 0);
-  display.println("Station controladora");
+  display.println("Master Station");
   display.display();
   delay(1500);
   display.clearDisplay();
@@ -228,6 +234,11 @@ void setup() {
 
 void loop() {
   if (Serial2.available()) {
+    StationA.Temp = 0;
+    StationA.Humid = 0;
+    StationA.Press = 0;
+    StationA.Altitude = 0;
+    StationA.Speed = 0;
     Transceiver.GetStruct(&StationA, sizeof(StationA));
 
     Serial.println();
@@ -237,6 +248,7 @@ void loop() {
     Serial.print("Press:     "); Serial.print(StationA.Press); Serial.println(" Pa");
     Serial.print("High:       "); Serial.print(StationA.Altitude); Serial.println(" m");
     Serial.print("wind speed:  "); Serial.print(StationA.Speed); Serial.println(" m/s");
+    Serial.print("Wind direc:  "); Serial.print(StationA.Direction);Serial.println(" Degrees");
     Serial.print("-------------------------------------");
     //Serial.println(Transceiver.GetAddressH());
     //Serial.print("Endereço: "); Serial.println(StationA.Adress);
@@ -258,13 +270,16 @@ void loop() {
     sprintf(msg, "%.2f", StationA.Speed);
     client.publish("estacao/velocidade", msg);
 
+    sprintf(msg, "%.2f", StationA.Direction);
+    client.publish("estacao/direcao", msg);
+
     //Transceiver.GetStruct(&StationB, sizeof(StationB));
 
     // ====================================================================================================================================
     // --- Show data in display ---
-    displayFunction(StationA.Temp, StationA.Humid, StationA.Speed, StationA.Altitude, StationA.Press);
+    displayFunction(StationA.Temp, StationA.Humid, StationA.Speed, StationA.Altitude, StationA.Press, Station.Direction);
 
-    // ==============================================================================================================
+    // ====================================================================================================================================
     // --- if is not connecteed to broker
     if (!client.connected()) {
       Serial.println();
