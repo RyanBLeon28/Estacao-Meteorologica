@@ -45,10 +45,10 @@ EBYTE Transceiver(&Serial2, PIN_M0, PIN_M1, PIN_AX);
 // --- Conect wifi ---
 // const char* ssid     = "Sala_J13";
 // const char* password = "salaj132023";
-// const char* ssid = "iphone Carolina (2)";
-// const char* password = "Carolina1999";
-const char* ssid = "A9";
-const char* password = "12345678";
+const char* ssid = "VETORIAL_11_5GHZ";
+const char* password = "07072022";
+// const char* ssid = "A9";
+// const char* password = "12345678";
 
 const char* mqtt_server = "test.mosquitto.org";
 
