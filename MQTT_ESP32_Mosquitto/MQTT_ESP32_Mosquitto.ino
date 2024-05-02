@@ -232,8 +232,11 @@ void setup() {
   display.clearDisplay();
 }
 
+int b = 0;
 void loop() {
-  if (Serial2.available()) {
+  //if (Serial2.available()) {
+  if (b == 0) {
+  
     StationA.Temp = 0;
     StationA.Humid = 0;
     StationA.Press = 0;
@@ -254,7 +257,9 @@ void loop() {
     //Serial.print("Endereço: "); Serial.println(StationA.Adress);
 
     delay(100);  //just to received data before send to cloud
-
+    
+    // ====================================================================================================================================
+    // --- Publicando em cada tópico ---
     sprintf(msg, "%.2f", StationA.Temp);
     client.publish("estacao/temperatura", msg);
 
