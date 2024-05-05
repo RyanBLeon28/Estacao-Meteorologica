@@ -90,8 +90,9 @@ http://localhost:3000
 
 Referencias:
 
-https://nodejs.org/en
-https://mosquitto.org/
-https://nodered.org/
-https://docs.influxdata.com/
-https://grafana.com/
+-https://nodejs.org/en
+
+-https://mosquitto.org/
+-https://nodered.org/
+-https://docs.influxdata.com/
+-https://grafana.com/
