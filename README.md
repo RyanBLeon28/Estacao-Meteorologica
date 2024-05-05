@@ -45,6 +45,8 @@ To run node-red locally, in terminal:
 influxd
 ```
 <h2>Grafana</h2>
-
+sudo apt-get install -y adduser libfontconfig1 musl
+wget https://dl.grafana.com/enterprise/release/grafana-enterprise_10.4.2_amd64.deb
+sudo dpkg -i grafana-enterprise_10.4.2_amd64.deb
 
 <h2>Microcontroladores</h2>
