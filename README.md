@@ -6,9 +6,7 @@
 Falar brevemente do projeto....
 
 <h2>MQTT</h2>
-https://mosquitto.org/
-test.mosquitto.org
-
+O broker utilizado nesse projeto foi o Eclipse Mosquitto. Usamos o mosquitto o qual e muito utilizado para IOT pois possui servidor aberto para projetos leves, nesse caso o endereco test.mosquitto.org.
 
 <h2>NODE JS</h2>
 Caso nao tenha o Node...
@@ -87,4 +85,13 @@ Em seu navegador, acesse:
 ```
 http://localhost:3000
 ```
-<h2>Microcontroladores</h2>
+
+
+
+Referencias:
+
+https://nodejs.org/en
+https://mosquitto.org/
+https://nodered.org/
+https://docs.influxdata.com/
+https://grafana.com/
