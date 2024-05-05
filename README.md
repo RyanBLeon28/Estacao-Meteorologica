@@ -1,6 +1,7 @@
 <h1>Estacacao Meteorologica Microcontrolada</h1>
-<div></div>
-<img src="Imagens/Estacaoo.jpeg" width=250px>
+<div  align="center">
+    <img src="Imagens/Estacao.jpeg" width=250px>
+</div>
 
 Falar brevemente do projeto....
 
@@ -33,20 +34,57 @@ To run node-red locally, in terminal:
 ```
 node-red
 ```
-
+Em seu navegador, acesse:
+```
+http://localhost:1880
+```
 <h2>InfluxDB</h2>
 Instalacao:
 
 ```
-
+curl -O https://download.influxdata.com/influxdb/releases/influxdb2_2.7.6-1_amd64.deb
 ```
-To run node-red locally, in terminal:
+```
+sudo dpkg -i influxdb2_2.7.6-1_amd64.deb
+```
+Para iniciar localmente, no seu terminal:
 ```
 influxd
 ```
-<h2>Grafana</h2>
-sudo apt-get install -y adduser libfontconfig1 musl
-wget https://dl.grafana.com/enterprise/release/grafana-enterprise_10.4.2_amd64.deb
-sudo dpkg -i grafana-enterprise_10.4.2_amd64.deb
 
+Em seu navegador, acesse:
+```
+http://localhost:8086
+```
+
+<h2>Grafana</h2>
+Para instalar e rodar o grafana localmente:
+
+```
+sudo apt-get install -y adduser libfontconfig1 musl
+```
+```
+wget https://dl.grafana.com/enterprise/release/grafana-enterprise_10.4.2_amd64.deb
+```
+```
+sudo dpkg -i grafana-enterprise_10.4.2_amd64.deb
+```
+Depois de instalado, voce pode dar acesso ao grafana da seguinte forma:
+
+```
+sudo systemctl enable grafana-server
+```
+E para iniciar o grafana:
+```
+sudo systemctl start grafana-server
+```
+
+Para checar se esta tudo certo, o status deve ser de ATIVO:
+```
+sudo systemctl status grafana-server
+```
+Em seu navegador, acesse:
+```
+http://localhost:3000
+```
 <h2>Microcontroladores</h2>
