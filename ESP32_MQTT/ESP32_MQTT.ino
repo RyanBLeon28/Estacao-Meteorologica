@@ -45,7 +45,7 @@ EBYTE Transceiver(&Serial2, PIN_M0, PIN_M1, PIN_AX);
 // --- Conect wifi ---
 // const char* ssid     = "Sala_J13";
 // const char* password = "salaj132023";
-const char* ssid = "VETORIAL_11_5GHZ";
+const char* ssid = "VETORIAL_11";
 const char* password = "07072022";
 // const char* ssid = "A9";
 // const char* password = "12345678";
@@ -260,6 +260,7 @@ void loop() {
     
     // ====================================================================================================================================
     // --- Publicando em cada tópico ---
+    StationA.Temp = 18;
     sprintf(msg, "%.2f", StationA.Temp);
     client.publish("estacao/temperatura", msg);
 
@@ -282,7 +283,7 @@ void loop() {
 
     // ====================================================================================================================================
     // --- Show data in display ---
-    displayFunction(StationA.Temp, StationA.Humid, StationA.Speed, StationA.Altitude, StationA.Press, Station.Direction);
+    displayFunction(StationA.Temp, StationA.Humid, StationA.Speed, StationA.Altitude, StationA.Press, StationA.Direction);
 
     // ====================================================================================================================================
     // --- if is not connecteed to broker
