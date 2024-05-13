@@ -3,7 +3,8 @@
     <img src="Imagens/Estacao.jpeg" width=250px>
 </div>
 
-Falar brevemente do projeto....
+As estações meteorológicas são equipamentos para monitoramento e registro de condições climáticas com sensores configuráveis para análise de parâmetros atmosféricos e outras variáveis que afetam as rotinas climatológicas. 
+O processo de coleta de dados acontece de forma automática - os sensores ligados a um microcontrolador receberão os dados e enviaram para um servidor (Datalogger). 
 
 <h2>MQTT</h2>
 O broker utilizado nesse projeto foi o Eclipse Mosquitto. Usamos o mosquitto o qual e muito utilizado para IOT pois possui servidor aberto para projetos leves, nesse caso o endereco test.mosquitto.org.
