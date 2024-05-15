@@ -1,4 +1,4 @@
-<h1>Estacacao Meteorologica Microcontrolada</h1>
+<h1>Estacacao Meteorológica Microcontrolada</h1>
 <div  align="center">
     <img src="Imagens/Estacao.jpeg" width=250px>
 </div>
@@ -7,7 +7,7 @@ As estações meteorológicas são equipamentos para monitoramento e registro de
 O processo de coleta de dados acontece de forma automática - os sensores ligados a um microcontrolador receberão os dados e enviaram para um servidor (Datalogger). 
 
 <h2>MQTT</h2>
-O broker utilizado nesse projeto foi o Eclipse Mosquitto. Usamos o mosquitto o qual e muito utilizado para IOT pois possui servidor aberto para projetos leves, nesse caso o endereco test.mosquitto.org.
+O broker utilizado nesse projeto foi o Eclipse Mosquitto. Usamos o mosquitto o qual é muito utilizado para IOT, pois possui servidor aberto para projetos leves. Nesse caso, o endereço usado foi test.mosquitto.org.
 
 <h2>NODE JS</h2>
 Caso nao tenha o Node...
