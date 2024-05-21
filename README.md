@@ -92,12 +92,12 @@ http://localhost:3000
 
 Referencias:
 
--https://nodejs.org/en
+NODE.JS. Node.js. Disponível em: https://nodejs.org/en. Acesso em: 19 maio 2023. 
 
--https://mosquitto.org/
+MOSQUITTO. Mosquitto. Disponível em: https://mosquitto.org/. Acesso em: 19 maio 2023.
 
--https://nodered.org/
+NODE-RED. Node-RED. Disponível em: https://nodered.org/. Acesso em: 19 maio 2023.
 
--https://docs.influxdata.com/
+INFLUXDATA. Documentation. Disponível em: https://docs.influxdata.com/. Acesso em: 19 maio 2023.
 
--https://grafana.com/
+GRAFANA LABS. Grafana. Disponível em: https://grafana.com/. Acesso em: 19 maio 2023.
