@@ -18,7 +18,7 @@ O sistema foi projetado para operar continuamente e com baixo consumo de energia
     <li><strong>Grafana:</strong> plataforma para visualização de dados que permite criar dashboards interativos e intuitivos para o acompanhamento das variáveis climáticas.</li>
 </ul>
 
-<p>Para mais detalhes sobre o desenvolvimento da estação, incluindo a calibração de sensores como o anemômetro e a integração dos dados, consulte o <a href="Relatorio_Estacao.pdf" target="_blank">Relatório Descritivo do Projeto</a>.</p>
+<p>Para mais detalhes sobre o desenvolvimento da estação, incluindo a calibração de sensores como o anemômetro e a integração dos dados, consulte o <a href="Estação_Meteorológica_Microcontrolada.pdf" target="_blank">Relatório Descritivo do Projeto</a>.</p>
 
 <h2>Referências</h2>
 
