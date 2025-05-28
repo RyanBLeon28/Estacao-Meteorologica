@@ -1,103 +1,37 @@
-<h1>Estacacao Meteorológica Microcontrolada</h1>
-<div  align="center">
-    <img src="Imagens/Estacao.jpeg" width=250px>
+<h1>Estação Meteorológica Microcontrolada</h1>
+
+<div align="center">
+    <img src="Imagens/Estacao.jpeg" width="250px">
 </div>
 
-As estações meteorológicas são equipamentos para monitoramento e registro de condições climáticas com sensores configuráveis para análise de parâmetros atmosféricos e outras variáveis que afetam as rotinas climatológicas. 
-O processo de coleta de dados acontece de forma automática - os sensores ligados a um microcontrolador receberão os dados e enviaram para um servidor (Datalogger). 
+As estações meteorológicas são equipamentos utilizados para monitoramento e registro de condições climáticas por meio de sensores que analisam parâmetros atmosféricos como temperatura, umidade, pressão e luminosidade. Neste projeto, os sensores estão conectados a um microcontrolador responsável por realizar a leitura dos dados em intervalos definidos. Esses dados são enviados automaticamente para um servidor remoto (Datalogger), que realiza o armazenamento e processamento das informações.
 
-<h2>MQTT</h2>
-O broker utilizado nesse projeto foi o Eclipse Mosquitto. Usamos o mosquitto o qual é muito utilizado para IOT, pois possui servidor aberto para projetos leves. Nesse caso, o endereço usado foi test.mosquitto.org.
+O sistema foi projetado para operar continuamente e com baixo consumo de energia, sendo ideal para aplicações em ambientes externos. A visualização dos dados é feita por meio de dashboards acessíveis via navegador, possibilitando o acompanhamento em tempo real das variáveis monitoradas.
 
-<h2>NODE JS</h2>
-Caso nao tenha o Node...
+<h2>Tecnologias Utilizadas</h2>
 
-```
-curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash
-```
-```
-sudo apt install nodejs
-```
+<ul>
+    <li><strong>MQTT (Eclipse Mosquitto):</strong> protocolo leve de comunicação utilizado para transmitir os dados dos sensores de forma eficiente e confiável.</li>
+    <li><strong>Node.js:</strong> ambiente de execução utilizado no backend para processar as mensagens recebidas e integrá-las aos demais componentes do sistema.</li>
+    <li><strong>Node-RED:</strong> ferramenta baseada em fluxo que facilita a criação de integrações entre os dados do MQTT e os bancos de dados utilizados.</li>
+    <li><strong>InfluxDB:</strong> banco de dados especializado em séries temporais, utilizado para armazenar os dados dos sensores com alta performance.</li>
+    <li><strong>Grafana:</strong> plataforma para visualização de dados que permite criar dashboards interativos e intuitivos para o acompanhamento das variáveis climáticas.</li>
+</ul>
 
-<h2>Node-Red</h2>
-Instalacao:
+<h2>Referências</h2>
 
-```
-sudo npm install -g --unsafe-perm node-red
-```
-Caso use docker:
-```
-docker run -it -p 1880:1880 --name StationNode nodered/node-red
-```
-To run node-red locally, in terminal:
-```
-node-red
-```
-Em seu navegador, acesse:
-```
-http://localhost:1880
-```
-<h2>InfluxDB</h2>
-Instalacao:
-
-```
-curl -O https://download.influxdata.com/influxdb/releases/influxdb2_2.7.6-1_amd64.deb
-```
-```
-sudo dpkg -i influxdb2_2.7.6-1_amd64.deb
-```
-Para iniciar localmente, no seu terminal:
-```
-influxd
-```
-
-Em seu navegador, acesse:
-```
-http://localhost:8086
-```
-
-<h2>Grafana</h2>
-Para instalar e rodar o grafana localmente:
-
-```
-sudo apt-get install -y adduser libfontconfig1 musl
-```
-```
-wget https://dl.grafana.com/enterprise/release/grafana-enterprise_10.4.2_amd64.deb
-```
-```
-sudo dpkg -i grafana-enterprise_10.4.2_amd64.deb
-```
-Depois de instalado, voce pode dar acesso ao grafana da seguinte forma:
-
-```
-sudo systemctl enable grafana-server
-```
-E para iniciar o grafana:
-```
-sudo systemctl start grafana-server
-```
-
-Para checar se esta tudo certo, o status deve ser de ATIVO:
-```
-sudo systemctl status grafana-server
-```
-Em seu navegador, acesse:
-```
-http://localhost:3000
-```
-
-
-##
-
-Referencias:
-
-NODE.JS. Node.js. Disponível em: https://nodejs.org/en. Acesso em: 19 maio 2023. 
-
-MOSQUITTO. Mosquitto. Disponível em: https://mosquitto.org/. Acesso em: 19 maio 2023.
-
-NODE-RED. Node-RED. Disponível em: https://nodered.org/. Acesso em: 19 maio 2023.
-
-INFLUXDATA. Documentation. Disponível em: https://docs.influxdata.com/. Acesso em: 19 maio 2023.
-
-GRAFANA LABS. Grafana. Disponível em: https://grafana.com/. Acesso em: 19 maio 2023.
+<p>
+NODE.JS. Node.js. Disponível em: <a href="https://nodejs.org/en">https://nodejs.org/en</a>. Acesso em: 19 maio 2023.
+</p>
+<p>
+MOSQUITTO. Mosquitto. Disponível em: <a href="https://mosquitto.org/">https://mosquitto.org/</a>. Acesso em: 19 maio 2023.
+</p>
+<p>
+NODE-RED. Node-RED. Disponível em: <a href="https://nodered.org/">https://nodered.org/</a>. Acesso em: 19 maio 2023.
+</p>
+<p>
+INFLUXDATA. Documentation. Disponível em: <a href="https://docs.influxdata.com/">https://docs.influxdata.com/</a>. Acesso em: 19 maio 2023.
+</p>
+<p>
+GRAFANA LABS. Grafana. Disponível em: <a href="https://grafana.com/">https://grafana.com/</a>. Acesso em: 19 maio 2023.
+</p>
