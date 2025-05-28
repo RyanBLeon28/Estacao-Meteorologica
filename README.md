@@ -4,7 +4,7 @@
     <img src="Imagens/Estacao.jpeg" width="250px">
 </div>
 
-As estações meteorológicas são equipamentos utilizados para monitoramento e registro de condições climáticas por meio de sensores que analisam parâmetros atmosféricos como temperatura, umidade, pressão e luminosidade. Neste projeto, os sensores estão conectados a um microcontrolador responsável por realizar a leitura dos dados em intervalos definidos. Esses dados são enviados automaticamente para um servidor remoto (Datalogger), que realiza o armazenamento e processamento das informações.
+As estações meteorológicas são equipamentos utilizados para monitoramento e registro de condições climáticas por meio de sensores que analisam parâmetros atmosféricos como temperatura, umidade, pressão, velocidade e direção do vento. Neste projeto, os sensores estão conectados a um microcontrolador responsável por realizar a leitura dos dados. Esses dados são enviados automaticamente por protocolo LoRa(Long Range) para um servidor remoto (Datalogger), que realiza o armazenamento e processamento das informações.
 
 O sistema foi projetado para operar continuamente e com baixo consumo de energia, sendo ideal para aplicações em ambientes externos. A visualização dos dados é feita por meio de dashboards acessíveis via navegador, possibilitando o acompanhamento em tempo real das variáveis monitoradas.
 
